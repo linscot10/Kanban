@@ -23,5 +23,5 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 
     localStorage.setItem("taskManagerUser", JSON.stringify(user))
 
-    window.location.href = 'dashoard.html'
+    window.location.href = '../taskManager/dashboard.html'
 })
