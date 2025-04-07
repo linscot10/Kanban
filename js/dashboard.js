@@ -66,7 +66,10 @@ function renderTasks() {
           <p class="card-text">${task.description || "No description."}</p>
           <p class="mb-1"><strong>Due:</strong> ${task.dueDate}</p>
           <p class="mb-2"><strong>Priority:</strong> ${task.priority}</p>
-          <span class="badge bg-secondary">${task.status}</span>
+          <span class="badge bg-secondary"><strong>Status:</strong>${task.status}</span>
+           <button class="btn btn-sm btn-primary me-2" onclick="openEditModal(${task.id})">Edit</button>
+      <button class="btn btn-sm btn-danger me-2" onclick="deleteTask(${task.id})">Delete</button>
+      <button class="btn btn-sm btn-secondary" onclick="updateStatus(${task.id})">Next Status</button>
         </div>
       </div>
     `;
@@ -90,3 +93,59 @@ function getPriorityColor(priority) {
 
 
 renderTasks()
+
+function openEditModal(taskId) {
+    const task = tasks.find(t => t.id === taskId)
+
+    document.getElementById('editTaskId').value = task.id
+    document.getElementById('editTitle').value = task.title
+    document.getElementById('editDescription').value = task.description
+    document.getElementById('editDueDate').value = task.dueDate
+    document.getElementById('editPriority').value = task.priority
+
+
+    const editModal = new bootstrap.Modal(document.getElementById('editTaskModal'))
+    editModal.show()
+}
+
+document.getElementById("editTaskForm").addEventListener("submit", (e) => {
+    e.preventDefault()
+    const id = parseInt(document.getElementById("editTaskId").value)
+    const taskIndex = tasks.findIndex(t => t.id === id)
+
+    tasks[taskIndex].title = document.getElementById("editTitle").value.trim();
+    tasks[taskIndex].description = document.getElementById("editDescription").value.trim();
+    tasks[taskIndex].dueDate = document.getElementById("editDueDate").value;
+    tasks[taskIndex].priority = document.getElementById("editPriority").value;
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    const editModal = bootstrap.Modal.getInstance(document.getElementById("editTaskModal"));
+    editModal.hide();
+
+    renderTasks();
+})
+
+
+function deleteTask(taskId) {
+    if (confirm("Are you sure you want to delete this task?")) {
+        tasks = tasks.filter(t => t.id !== taskId);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        renderTasks();
+    }
+}
+
+function updateStatus(taskId) {
+    const taskIndex = tasks.findIndex(t => t.id === taskId);
+    const currentStatus = tasks[taskIndex].status;
+
+    const nextStatus = {
+        "To Do": "In Progress",
+        "In Progress": "Done",
+        "Done": "To Do"
+    };
+
+    tasks[taskIndex].status = nextStatus[currentStatus];
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
+}

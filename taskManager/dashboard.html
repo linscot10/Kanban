@@ -49,6 +49,47 @@
 
         </div>
     </div>
+
+   
+    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editTaskForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editTaskId" />
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label">Title</label>
+                            <input type="text" id="editTitle" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">Description</label>
+                            <textarea id="editDescription" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDueDate" class="form-label">Due Date</label>
+                            <input type="date" id="editDueDate" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPriority" class="form-label">Priority</label>
+                            <select id="editPriority" class="form-select" required>
+                                <option value="High">🔥 High</option>
+                                <option value="Medium">⏳ Medium</option>
+                                <option value="Low">💤 Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
