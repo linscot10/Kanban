@@ -45,12 +45,37 @@
         </form>
 
         <h5>Your Task List</h5>
-        <div id="taskList" class="row gy-3">
+        <!-- <div id="taskList" class="row gy-3">
 
+        </div> -->
+        <!-- drag and drop -->
+
+        <!-- Kanban Board -->
+        <div class="row" id="kanbanBoard">
+            <div class="col-md-4">
+                <h4>To Do</h4>
+                <div class="kanban-column bg-light p-2 rounded" id="todo" ondrop="onDrop(event, 'To Do')"
+                    ondragover="allowDrop(event)">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4>In Progress</h4>
+                <div class="kanban-column bg-light p-2 rounded" id="inprogress" ondrop="onDrop(event, 'In Progress')"
+                    ondragover="allowDrop(event)">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4>Done</h4>
+                <div class="kanban-column bg-light p-2 rounded" id="done" ondrop="onDrop(event, 'Done')"
+                    ondragover="allowDrop(event)">
+                </div>
+            </div>
         </div>
+
+
     </div>
 
-   
+
     <div class="modal fade" id="editTaskModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

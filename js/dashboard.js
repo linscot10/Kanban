@@ -1,3 +1,4 @@
+let draggedTaskId = null;
 const user = JSON.parse(localStorage.getItem('taskManagerUser'));
 
 if (!user) {
@@ -11,7 +12,7 @@ document.getElementById('logoutBtn').addEventListener("click", () => {
     window.location.href = "login.html";
 })
 
-let tasks = JSON.parse(localStorage.getItem('task')) || []
+let tasks = JSON.parse(localStorage.getItem('tasks')) || []
 
 const taskForm = document.getElementById('taskForm')
 const taskList = document.getElementById('taskList')
@@ -48,34 +49,69 @@ taskForm.addEventListener("submit", (e) => {
 
 
 function renderTasks() {
-    taskList.innerHTML = ""
-    const userTasks = tasks.filter((t) => t.createdBy === user.username)
+    // drag drop
+    document.getElementById("todo").innerHTML = "";
+    document.getElementById("inprogress").innerHTML = "";
+    document.getElementById("done").innerHTML = "";
 
-    if (userTasks.length === 0) {
-        taskList.innerHTML = `<p class="text-muted">No tasks added yet.</p>`;
-        return;
-    }
+    tasks.forEach(task => {
+        const taskCard = document.createElement("div");
+        taskCard.classList.add("card", "shadow-sm", "mb-3", "p-2");
+        taskCard.setAttribute("draggable", "true");
+        taskCard.setAttribute("ondragstart", `onDragStart(event, ${task.id})`);
+        taskCard.classList.add(`border-start`, `border-5`, `border-${getPriorityColor(task.priority)}`);
 
-    userTasks.forEach((task) => {
-        const taskCard = document.createElement('div')
-        taskCard.className = 'col-md-6'
         taskCard.innerHTML = `
-      <div class="card shadow-sm border-start border-5 border-${getPriorityColor(task.priority)}">
-        <div class="card-body">
-          <h5 class="card-title">${task.title}</h5>
-          <p class="card-text">${task.description || "No description."}</p>
-          <p class="mb-1"><strong>Due:</strong> ${task.dueDate}</p>
-          <p class="mb-2"><strong>Priority:</strong> ${task.priority}</p>
-          <span class="badge bg-secondary"><strong>Status:</strong>${task.status}</span>
-           <button class="btn btn-sm btn-primary me-2" onclick="openEditModal(${task.id})">Edit</button>
-      <button class="btn btn-sm btn-danger me-2" onclick="deleteTask(${task.id})">Delete</button>
-      <button class="btn btn-sm btn-secondary" onclick="updateStatus(${task.id})">Next Status</button>
-        </div>
-      </div>
-    `;
-        taskList.appendChild(taskCard);
+          <div class="card-body">
+            <h5 class="card-title">${task.title}</h5>
+            <p class="card-text">${task.description || "No description."}</p>
+            <p><strong>Due:</strong> ${task.dueDate}</p>
+            <p><strong>Priority:</strong> ${task.priority}</p>
+            <button class="btn btn-sm btn-primary me-2" onclick="openEditModal(${task.id})">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})">Delete</button>
+          </div>
+        `;
 
+        // Append to correct column
+        if (task.status === "To Do") {
+            document.getElementById("todo").appendChild(taskCard);
+        } else if (task.status === "In Progress") {
+            document.getElementById("inprogress").appendChild(taskCard);
+        } else if (task.status === "Done") {
+            document.getElementById("done").appendChild(taskCard);
+        }
     });
+
+
+    // normal to do list
+    // taskList.innerHTML = ""
+    // const userTasks = tasks.filter((t) => t.createdBy === user.username)
+
+    // if (userTasks.length === 0) {
+    //     taskList.innerHTML = `<p class="text-muted">No tasks added yet.</p>`;
+    //     return;
+    // }
+
+    // userTasks.forEach((task) => {
+    //     const taskCard = document.createElement('div')
+    //     taskCard.className = 'col-md-6'
+    //     taskCard.innerHTML = `
+    //   <div class="card shadow-sm border-start border-5 border-${getPriorityColor(task.priority)}">
+    //     <div class="card-body">
+    //       <h5 class="card-title">${task.title}</h5>
+    //       <p class="card-text">${task.description || "No description."}</p>
+    //       <p class="mb-1"><strong>Due:</strong> ${task.dueDate}</p>
+    //       <p class="mb-2"><strong>Priority:</strong> ${task.priority}</p>
+    //       <span class="badge bg-secondary"><strong>Status:</strong>${task.status}</span>
+    //        <button class="btn btn-sm btn-primary me-2" onclick="openEditModal(${task.id})">Edit</button>
+    //   <button class="btn btn-sm btn-danger me-2" onclick="deleteTask(${task.id})">Delete</button>
+    //   <button class="btn btn-sm btn-secondary" onclick="updateStatus(${task.id})">Next Status</button>
+    //     </div>
+    //   </div>
+    // `;
+    //     taskList.appendChild(taskCard);
+
+    // });
 }
 
 function getPriorityColor(priority) {
@@ -148,4 +184,27 @@ function updateStatus(taskId) {
     tasks[taskIndex].status = nextStatus[currentStatus];
     localStorage.setItem("tasks", JSON.stringify(tasks));
     renderTasks();
+}
+
+
+
+function onDragStart(event, taskId) {
+
+    draggedTaskId = taskId;
+}
+
+function allowDrop(event) {
+    event.preventDefault(); // Allow drop
+}
+
+
+function onDrop(event, newStatus) {
+    event.preventDefault();
+
+    const taskIndex = tasks.findIndex(t => t.id === draggedTaskId);
+    if (taskIndex !== -1) {
+        tasks[taskIndex].status = newStatus;
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        renderTasks(); // Re-render board
+    }
 }
