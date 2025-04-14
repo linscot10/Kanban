@@ -1,4 +1,4 @@
-let expenses = []
+let expenses = JSON.parse(localStorage.getItem('expenses')) || []
 
 const expenseForm = document.getElementById('expenseForm');
 const amountInput = document.getElementById('amount');
@@ -30,6 +30,7 @@ expenseForm.addEventListener('submit', (e) => {
     // console.log(expense)
 
     expenses.push(expense)
+    saveToLocalStorage();
 
     renderExpenses();
     expenseForm.reset();
@@ -59,7 +60,13 @@ function renderExpenses() {
     });
 }
 
+function saveToLocalStorage() {
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+}
 function deleteExpense(id) {
     expenses = expenses.filter(exp => exp.id !== id);
+    saveToLocalStorage();
     renderExpenses();
 }
+
+renderExpenses();
