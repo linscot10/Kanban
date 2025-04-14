@@ -1,4 +1,5 @@
 let expenses = JSON.parse(localStorage.getItem('expenses')) || []
+let expenseChart;
 
 const expenseForm = document.getElementById('expenseForm');
 const amountInput = document.getElementById('amount');
@@ -33,6 +34,7 @@ expenseForm.addEventListener('submit', (e) => {
     saveToLocalStorage();
 
     renderExpenses();
+    renderChart()
     expenseForm.reset();
 })
 
@@ -93,6 +95,48 @@ function renderExpenses() {
 document.getElementById('searchInput').addEventListener('input', renderExpenses);
 document.getElementById('categoryFilter').addEventListener('change', renderExpenses);
 
+function renderChart() {
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+
+    const categoryTotals = {};
+    expenses.forEach(exp => {
+        categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+    });
+
+    const data = {
+        labels: Object.keys(categoryTotals),
+        datasets: [{
+            label: 'Expenses by Category',
+            data: Object.values(categoryTotals),
+            backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1'],
+            borderColor: '#fff',
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: false
+                }
+            }
+        }
+    };
+
+    // Destroy previous chart to avoid overlap
+    if (expenseChart) expenseChart.destroy();
+
+    expenseChart = new Chart(ctx, config);
+}
+
+
 function saveToLocalStorage() {
     localStorage.setItem('expenses', JSON.stringify(expenses));
 }
@@ -100,6 +144,8 @@ function deleteExpense(id) {
     expenses = expenses.filter(exp => exp.id !== id);
     saveToLocalStorage();
     renderExpenses();
+    renderChart()
 }
 
 renderExpenses();
+renderChart()   
