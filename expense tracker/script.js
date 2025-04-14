@@ -40,25 +40,58 @@ expenseForm.addEventListener('submit', (e) => {
 // Render the expenses in a table
 function renderExpenses() {
     const tableBody = document.getElementById('expenseTableBody');
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+    const selectedCategory = document.getElementById('categoryFilter').value;
+
+
     tableBody.innerHTML = '';
 
-    expenses.forEach((expense, index) => {
+    let filteredExpenses = expenses.filter(exp => {
+        const matchDescription = exp.description.toLowerCase().includes(searchQuery);
+        const matchCategory = selectedCategory === '' || exp.category === selectedCategory;
+        return matchDescription && matchCategory;
+    });
+
+    if (filteredExpenses.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No matching records found</td></tr>`;
+        return;
+    }
+
+
+    filteredExpenses.forEach((expense, index) => {
         const row = document.createElement('tr');
 
         row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>Ksh ${expense.amount.toFixed(2)}</td>
-        <td>${expense.category}</td>
-        <td>${expense.description}</td>
-        <td>${expense.date}</td>
-        <td>
-          <button class="btn btn-sm btn-danger" onclick="deleteExpense(${expense.id})">🗑️</button>
-        </td>
-      `;
+          <td>${index + 1}</td>
+          <td>Ksh ${expense.amount.toFixed(2)}</td>
+          <td>${expense.category}</td>
+          <td>${expense.description}</td>
+          <td>${expense.date}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteExpense(${expense.id})">🗑️</button>
+          </td>
+        `;
+
+        // expenses.forEach((expense, index) => {
+        //     const row = document.createElement('tr');
+
+        //     row.innerHTML = `
+        //     <td>${index + 1}</td>
+        //     <td>Ksh ${expense.amount.toFixed(2)}</td>
+        //     <td>${expense.category}</td>
+        //     <td>${expense.description}</td>
+        //     <td>${expense.date}</td>
+        //     <td>
+        //       <button class="btn btn-sm btn-danger" onclick="deleteExpense(${expense.id})">🗑️</button>
+        //     </td>
+        //   `;
 
         tableBody.appendChild(row);
     });
 }
+
+document.getElementById('searchInput').addEventListener('input', renderExpenses);
+document.getElementById('categoryFilter').addEventListener('change', renderExpenses);
 
 function saveToLocalStorage() {
     localStorage.setItem('expenses', JSON.stringify(expenses));
