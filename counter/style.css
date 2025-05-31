@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: beige;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    min-height: 100vh;
+    text-align: center;
+
+}
+
+.container {
+    width: 25rem;
+    height: 30rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(219, 179, 20);
+    border-radius: 0.8rem;
+
+}
+
+.result {
+    width: 8rem;
+    font-size: 4rem;
+    margin: 0.4rem;
+    /* background-color: aliceblue; */
+    border-radius: 0.8rem;
+}
+
+.counter {
+    width: 20rem;
+    height: 8rem;
+    margin: 0.4rem;
+    /* background-color: aliceblue; */
+    border-radius: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.counter button {
+    width: 7rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    border: navajowhite;
+    font-size: 1rem;
+    margin: 0.5rem;
+    padding: 0.5;
+}
+
+.counter button:hover {
+    background-color: aliceblue;
+}
+
+.counter button:focus {
+    background-color: aliceblue;
+}
+
+.clicks {
+    font-size: 1.2rem;
+    /* background-color: aliceblue; */
+    width: 20rem;
+    width: 20rem;
+    height: 8rem;
+    margin: 0.4rem;
+    border-radius: 0.8rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+}
+p{
+    margin: 0.4rem;
+}
