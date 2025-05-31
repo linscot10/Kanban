@@ -12,19 +12,21 @@
     <div class="container">
 
         <div class="result">
-            <p class="count">0</p>
+            <p id="count">0</p>
         </div>
         <div class="counter">
-            <button>decrement</button>
-            <button>increment</button>
+            <button onclick="dec()">decrement</button>
+            <button onclick="inc()">increment</button>
 
         </div>
 
         <div class="clicks">
-            <p>Clicks on increment: <span>0</span></p>
-            <p>Clicks on decrement: <span>0</span></p>
+            <p>Clicks on increment: <span id="incCount">0</span></p>
+            <p>Clicks on decrement: <span id="decCount">0</span></p>
         </div>
     </div>
+
+    <script src="app.js"></script>
 </body>
 
 </html>
